@@ -2,7 +2,6 @@ const inquirer = require('inquirer');
 const sql = require('./db/query');
 
 
-
 // 'Add Department'
 newDept();
 
