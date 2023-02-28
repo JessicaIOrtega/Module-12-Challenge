@@ -34,23 +34,35 @@ class DBQuery {
     }
 
     updateEmpRole(data){
-        
+        const values = [data.role_id, data.employee_id];
+        return this.db
+        .promise()
+        .query(`UPDATE employee SET role_id = ? WHERE id = ?`,
+        values
+        )
     }
 
     viewDepts(data){
-
+        return this.db
+        .promise()
+        .query( `SELECT * FROM department`);
     }
 
     viewEmployees(data){
-
+        const values = [data.department_id]
+        return this.db
+        .promise()
+        .query(`SELECT employee.first_name AS "First Name", employee.last_name AS "Last Name", department_department_name AS Department FROM employee INNER JOIN role ON employee.role_id = role.id INNER JOIN department on role.department_id = department.id WHERE department.id = ? `,
+        values
+        );
     }
 
     viewRoles(data){
-        
+        return this.db
+        .promise()
+        .query(`SELECT role.title AS Title, role.salary AS Salary, department.department_name AS Department FROM role LEFT JOIN department ON role.department_id = department.id ORDER BY Department, role.id ASC`);
     }
 
-
-
-}
+};
 
 module.exports = new DBQuery(db);
