@@ -10,13 +10,19 @@ SQL Challenge: Employee Tracker
   - [License](#License)
 
   ## Description
-  
+  A command-line application from scratch to manage a company's employee database, using Node.js, Inquirer, and MySQL.
   
   ## Usage
-  
+  When using this application you'll be able to add or view the different departments, employees and roles as well as the salaries from each.
+
+  Here is the database schema used:
+![DB schema](12-sql-homework-demo-01.png)
 
   ## Installation
-  
+  You'll need to install:
+  -MySQL2 (to connect to MySQL database and perform queries)
+  -Inquirer (to interact with the user via the command line)
+  -Console.table (to print MySQL rows to the console)
 
   ## Credits
   N/A

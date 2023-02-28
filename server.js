@@ -1,5 +1,6 @@
 const inquirer = require('inquirer');
-const sql = require('./db/query.sql');
+const mysql = require('mysql2');
+const sql = require('./db/query');
 const choiceHelper = require('./lib/choiceHelper');
 const consoleTable = require('console.table');
 
@@ -144,7 +145,7 @@ const updateEmpRole = async () => {
 
 //'View all Departments'
 const viewDepts = () => {
-    sql.viewDepts()
+    sql.viewDepts1()
 
         .then(([rows]) => {
             console.log('/n');
