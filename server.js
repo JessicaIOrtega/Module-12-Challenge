@@ -1,34 +1,190 @@
 const inquirer = require('inquirer');
-const sql = require('./db/query');
-
+const sql = require('./db/query.sql');
+const choiceHelper = require('./lib/choiceHelper');
+const consoleTable = require('console.table');
 
 // 'Add Department'
-newDept();
+const newDept = async () => {
+    const department = await inquirer.prompt([
+        {
+            type: 'input',
+            name: 'name',
+            message: 'What is the name of the Department?',
+            validate: (name) => {
+                if (name) {
+                    return true;
+                } else {
+                    console.log('Please enter a Department name')
+                    return false;
+                }
+            },
+        },
+    ]);
 
+    await sql.newDept(department);
+    mainQuestions();
+}
 
 //'Add Employee'
-newEmployee();
+const newEmployee = async () => {
+    const roleArr = await choiceHelper.roleChoices();
+    const employee = await inquirer.prompt([
+        {
+            type: 'input',
+            name: 'first_name',
+            message: 'What is Employees first name?',
+            validate: (first) => {
+                if (first && isNaN(first)) {
+                    return true;
+                } else {
+                    console.log('Please enter a name')
+                    return false;
+                }
+            },
+        },
+        {
+            type: 'input',
+            name: 'last_name',
+            message: 'What is Employees last name?',
+            validate: (last) => {
+                if (last && isNaN(last)) {
+                    return true;
+                } else {
+                    console.log('Please enter a last name')
+                    return false;
+                }
+            },
+        },
+        {
+            type: 'list',
+            name: 'role_id',
+            message: 'What is the Employee role?',
+            choices: roleArr,
+            loop: false,
+        }
+    ]);
+
+    await sql.newEmployee(employee);
+    mainQuestions();
+}
+
 
 
 //'Add Role'
-newRole();
+const newRole = async () => {
+    const choicesArr = await choiceHelper.deptChoices();
+
+    const role = await inquirer.prompt([
+        {
+            type: 'input',
+            name: 'title',
+            message: 'What is the name of the Role?',
+            validate: (title) => {
+                if (title) {
+                    return true;
+                } else {
+                    console.log('Please enter a Role name')
+                    return false;
+                }
+            },
+        },
+        {
+            type: 'input',
+            name: 'salary',
+            message: 'Enter Role Salary',
+            validate: (salary) => {
+                if (salary && !isNaN(salary)) {
+                    return true;
+                } else {
+                    console.log('Please enter a Role salary');
+                    return false;
+                }
+            },
+        },
+        {
+            type: 'list',
+            name: 'department_id',
+            message: 'What Department is the role associated with?',
+            choices: choicesArr,
+            loop: false,
+        }
+    ]);
+
+    await sql.newRole(role);
+    mainQuestions();
+}
 
 
 //'Update Employee Role'
-updateEmpRole();
+const updateEmpRole = async () => {
+    const roleArr = await choiceHelper.roleChoices();
+    const employeeArr = await choiceHelper.employeeChoices();
+
+    const employee = await inquirer.prompt([
+        {
+            type: 'list',
+            name: 'employee_id',
+            message: 'What Employee do you want to update?',
+            choices: employeeArr,
+            loop: false,
+        },
+        {
+            type: 'list',
+            name: 'role_id',
+            message: 'What is Employee Role?',
+            choices: roleArr,
+            loop: false,
+        }
+    ]);
+
+    await sql.updateEmpRole(employee);
+    mainQuestions();
+}
 
 
 //'View all Departments'
-viewDepts();
+const viewDepts = () => {
+    sql.viewDepts()
+
+        .then(([rows]) => {
+            console.log('/n');
+            console.log(consoleTable.getTable(rows));
+        })
+
+        .then(() => {
+            mainQuestions();
+        })
+}
 
 
 //'View all Employees'
-viewEmployees();
+const viewEmployees = () => {
+    sql.viewEmployees()
+
+        .then(([rows]) => {
+            console.log('/n');
+            console.log(consoleTable.getTable(rows));
+        })
+
+        .then(() => {
+            mainQuestions();
+        })
+}
 
 
 //'View all Roles'
-viewRoles();
+const viewRoles = () => {
+    sql.viewRoles()
 
+        .then(([rows]) => {
+            console.log('/n');
+            console.log(consoleTable.getTable(rows));
+        })
+
+        .then(() => {
+            mainQuestions();
+        })
+}
 
 const mainQuestions = () => {
     inquirer
@@ -78,6 +234,6 @@ const mainQuestions = () => {
                     break;
             }
         })
-};
+}
 
 mainQuestions();
